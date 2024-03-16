@@ -1,11 +1,27 @@
-const { getResponseObject } = require("../../helpers/supporter")
+const mongoose = require("mongoose");
 
-module.exports.getUserDetails = (req, res, next)=>{
-    const response = getResponseObject();
+const { getResponseObject } = require("../../helpers/supporter");
 
-    const {user_id: userId} = req.body;
+const User = require("../../mongoose/models/User");
 
-    response.message = `User Details Fetched Successfully for ${userId}`;
+const ObjectId = mongoose.Types.ObjectId;
 
-    return res.status(200).json(response);
+module.exports.getUserDetails = async(req, res, next)=>{
+    try{
+        const response = getResponseObject();
+
+        const {id: userId} = req.params;
+        const userData = await User.findOne({_id: new ObjectId(userId)}, {password: 0}).exec();
+        if(!userData){
+            response.message = "User details doesn't exist for the given id.";
+            return res.status(401).json(response);
+        }
+        response.data = userData;
+        response.message = "User details fetched successfully!";
+        return res.status(200).json(response);
+    }
+    catch(err){
+        console.error(err);
+        next(err);
+    }
 }

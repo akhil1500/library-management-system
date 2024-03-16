@@ -1,11 +1,24 @@
-const { getResponseObject } = require("../../helpers/supporter")
+const mongoose = require("mongoose");
 
-module.exports.deleteUser = (req, res, next)=>{
-    const response = getResponseObject();
+const { getResponseObject } = require("../../helpers/supporter");
+const ObjectId = mongoose.Types.ObjectId;
 
-    const {id: userId} = req.body;
+const User = require("../../mongoose/models/User");
 
-    response.message = `User - ${userId} deleted successfully from the system`;
 
-    return res.status(200).json(response);
+module.exports.deleteUser = async(req, res, next)=>{
+    try{
+        const response = getResponseObject();
+
+        const {id: userId} = req.params;
+
+        await User.deleteOne({_id: new ObjectId(userId)}).exec();
+
+        response.message = `User - ${userId} deleted successfully!`;
+        return res.status(200).json(response);
+    }
+    catch(err){
+        console.error(err);
+        next(err);
+    }
 }

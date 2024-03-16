@@ -1,11 +1,19 @@
-const { getResponseObject } = require("../../helpers/supporter")
+const { getResponseObject } = require("../../helpers/supporter");
 
-module.exports.borrowABook = (req, res, next)=>{
-    const response = getResponseObject();
+const BorrowingHistory = require("../../mongoose/models/BorrowingHistory");
 
-    const {id: userId} = req.body;
+module.exports.borrowABook = async(req, res, next)=>{
+    try{
+        const response = getResponseObject();
 
-    response.message = `Borrow Book History is updated successfully for ${userId}`;
-
-    return res.status(200).json(response);
+        const {id: userId} = req.body;
+    
+        response.message = `Borrow Book History is updated successfully for ${userId}`;
+    
+        return res.status(200).json(response);
+    }
+    catch(err){
+        console.error(err);
+        next(err);
+    }
 }

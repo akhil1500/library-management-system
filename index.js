@@ -42,16 +42,38 @@ function setToEnv(secret){
 }
 
 async function fetchSecrets(){
-    const parseSecret = require("./secrets_development.json");
-    setToEnv(parseSecret);
+    try{
+        const parseSecret = require("./secrets_development.json");
+        setToEnv(parseSecret);
+    }
+    catch(e){
+        console.log(e);
+        throw new Error('Failed to fetch the secrets', e)
+    }
 }
 
+async function waitForMongooseConnection(){
+    new Promise((resolve, reject)=>{
+        const mongoose = require("./mongoose/index");
+        mongoose.connection.on("open",()=>{
+            resolve();
+        })
+        mongoose.connection.on("error", error => {
+            console.error("MongoDB connection error:", error);
+            reject(error);
+        });
+        
+    })
+}
+
+
 async function start(){
-    await fetchSecrets()
-    const connectToMongo = require("./mongoose/index");
-    const mongoDb = connectToMongo();
+    await fetchSecrets();
+    const main = require("./mongoose/index");
+    await main();
+    // await waitForMongooseConnection();
     
-    const app = require("./app").startApp(mongoDb);
+    const app = require("./app").startApp({});
     app.set('port', port);
     const server = http.createServer(app);
 

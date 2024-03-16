@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-// const mongoose = require("../index")()
+// const mongoose = require("../index");
 
 
 const {Schema} = mongoose;
@@ -10,7 +10,9 @@ const userSchema = new Schema(
             type: String
         },
         email: {
-            type: String
+            type: String,
+            required: true,
+            unique: true
         },
         password: {
             type: String

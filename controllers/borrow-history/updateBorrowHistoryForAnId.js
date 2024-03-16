@@ -1,11 +1,21 @@
+const mongoose = require("mongoose");
+
 const { getResponseObject } = require("../../helpers/supporter")
 
-module.exports.updateBorrowHistoryForAnId = (req, res)=>{
-    const response = getResponseObject();
+const BorrowingHistory = require("../../mongoose/models/BorrowingHistory");
 
-    const {id: bhId} = req.body;
+module.exports.updateBorrowHistoryForAnId = async(req, res, next)=>{
+    try{
+        const response = getResponseObject();
 
-    response.message = `Borrow History updated for ${bhId} `;
-
-    return res.status(200).json(response);
+        const {id: bhId} = req.body;
+    
+        response.message = `Borrow History updated for ${bhId} `;
+    
+        return res.status(200).json(response);
+    }
+    catch(err){
+        console.error(err);
+        next(err);
+    }
 }

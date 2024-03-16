@@ -1,11 +1,25 @@
+const mongoose = require("mongoose");
+
 const { getResponseObject } = require("../../helpers/supporter")
 
-module.exports.getBhDataForAnId = (req, res, next)=>{
-    const response = getResponseObject();
+const BorrowingHistory = require("../../mongoose/models/BorrowingHistory");
 
-    const {id: bhId} = req.query;
+const ObjectId = mongoose.Types.ObjectId;
 
-    response.message = `Borrow History fetched successfully for ${bhId}`;
+module.exports.getBhDataForAnId = async(req, res, next)=>{
+    try{
+        const response = getResponseObject();
 
-    return res.status(200).json(response);
+
+        const {id: bhId} = req.query;
+        // const bhData = await BorrowingHistory.findOne({})
+    
+        response.message = `Borrow History fetched successfully for ${bhId}`;
+    
+        return res.status(200).json(response);
+    }
+    catch(err){
+        console.error(err);
+        next(err);
+    }
 }

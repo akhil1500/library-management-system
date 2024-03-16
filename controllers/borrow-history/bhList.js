@@ -1,11 +1,34 @@
-const { getResponseObject } = require("../../helpers/supporter")
+const { getResponseObject } = require("../../helpers/supporter");
 
-module.exports.bhList = (req, res, next)=>{
-    const response = getResponseObject();
+const BorrowingHistory = require("../../mongoose/models/BorrowingHistory");
 
-    const {page_no: pageNo, page_size: pageSize=50} = req.query;
+module.exports.bhList = async(req, res, next)=>{
+    try{
+        const response = getResponseObject();
 
-    response.message = `${pageSize} Borrow History fetched for given ${pageNo}`;
+        const {page_no: pageNo=1, page_size: pageSize=20} = req.query;
+        const skip = pageNo > 0 ? (parseInt(pageNo) - 1) * pageSize : 0;
 
-    return res.status(200).json(response);
+        const promises = [
+            BorrowingHistory.find({}).skip(skip).limit(pageSize).exec(),
+            BorrowingHistory.countDocuments({}).exec()
+        ];
+        const result = await Promise.all(promises);
+        const bhList = result[0];
+        const totalCount = result[1];
+
+        response.data = {
+            bh_list: bhList,
+            total_bh: totalCount,
+            total_pages: Math.ceil(totalCount/pageSize)
+        }
+    
+        response.message = `${bhList.length} Borrow History fetched for given ${pageNo}`;
+    
+        return res.status(200).json(response);
+    }
+    catch(err){
+        console.error(err);
+        next(err);
+    }
 }

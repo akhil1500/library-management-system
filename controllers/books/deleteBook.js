@@ -1,11 +1,25 @@
+const mongoose = require("mongoose");
+
 const { getResponseObject } = require("../../helpers/supporter")
 
-module.exports.deleteBook = (req, res, next)=>{
-    const response = getResponseObject();
+const Book = require("../../mongoose/models/Book");
 
-    const {id: bookId} = req.params;
+const ObjectId = mongoose.Types.ObjectId;
 
-    response.message `${bookId} deleted successfully!!`;
 
-    return res.status(200).json(response);
+module.exports.deleteBook = async(req, res, next)=>{
+    try{
+        const response = getResponseObject();
+
+        const {id: bookId} = req.params;
+
+        await Book.deleteOne({_id: new ObjectId(bookId)}).exec();
+    
+        response.message = `${bookId} deleted successfully!!`;
+        return res.status(200).json(response);
+    }
+    catch(err){
+        console.error(err);
+        next(err);
+    }
 }

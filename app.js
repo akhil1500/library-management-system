@@ -1,9 +1,12 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
+const bodyParser = require('body-parser');
+
 const cors = require("cors");
 const helmet = require("helmet");
 const httpErrors = require("http-errors");
 const { getErrorResponse } = require("./helpers/supporter");
+const addHeaders = require("./middlewares/addHeaders");
 
 process.on("unhandledRejection", (err)=>{
     console.error(err);
@@ -20,8 +23,13 @@ const startApp = (mongoDb)=>{
 			"preflightContinue": false,
 		}
 	));
-    
+    app.use(express.json());
+    app.use(express.urlencoded({ extended: true }));
+    app.use(bodyParser.json());
     app.use(helmet());
+
+    app.use(addHeaders(mongoDb));
+    
 
     app.get("/olms", (req, res)=>{
         res.json({message: `Hello olms server ${process.env.NODE_ENV}`});
@@ -30,7 +38,7 @@ const startApp = (mongoDb)=>{
         res.json({message: `Service is up and running in ${process.env.NODE_ENV}`});
     })
 
-    app.use("/olms/v1", require("./v1_routes/index"));
+    app.use("/olms/v1/", require("./v1_routes/index"));
 
     app.use((req, res, next)=>{
         next(httpErrors(404));

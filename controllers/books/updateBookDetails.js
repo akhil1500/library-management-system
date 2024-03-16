@@ -1,11 +1,28 @@
+const mongoose = require("mongoose");
+
 const { getResponseObject } = require("../../helpers/supporter")
 
-module.exports.updateBookDetails = (req, res, next)=>{
-    const response = getResponseObject();
+const Book = require("../../mongoose/models/Book");
 
-    const {id: bookId} = req.body;
 
-    response.message = `Book data updated successfully for ${bookId}`;
+module.exports.updateBookDetails = async(req, res, next)=>{
+    try{
+        const response = getResponseObject();
+        
+        const {id: bookId} = req.params;
+        const updatedBook = await Book.findByIdAndUpdate(bookId, req.body, {new: true});
+        if(!updatedBook){
+            response.status = "error";
+            response.message = "Book doesn't exist!";
+            return res.status(404).json(response);
+        }
 
-    return res.status(200).json(response);
+        response.data = updatedBook;
+        response.message = `Book data updated successfully for ${bookId}`;
+        return res.status(200).json(response);
+    }
+    catch(err){
+        console.error(err);
+        next(err);
+    }
 }

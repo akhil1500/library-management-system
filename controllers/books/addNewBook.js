@@ -1,9 +1,30 @@
 const { getResponseObject } = require("../../helpers/supporter")
 
-module.exports.addNewBook = (req, res, next)=>{
-    const response = getResponseObject();
+const Book = require("../../mongoose/models/Book");
 
-    response.message = "New Book Added Successfully!!";
+module.exports.addNewBook = async(req, res, next)=>{
+    try{
+        const response = getResponseObject();
+        const content = req.body;
 
-    return res.status(200).json(response);
+        const book = new Book({
+            title: content.title,
+            author: content.author,
+            genre: content.genre,
+            published_year: content.published_year,
+            isbn: content.isbn,
+            quantity_in_stock: content.quantity_in_stock
+        })
+
+        const newBook = await book.save();
+
+        response.data = newBook;
+        response.message = "New Book Added Successfully!!";
+    
+        return res.status(200).json(response);
+    }
+    catch(err){
+        console.error(err);
+        next(err);
+    }
 }

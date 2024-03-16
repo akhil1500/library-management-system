@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-// const mongoose = require("../index")()
+// const mongoose = require("../index")
 
 
 const {Schema} = mongoose;

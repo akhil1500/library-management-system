@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-// const mongoose = require("../index")()
+// const mongoose = require("../index")
 
 const {Schema} = mongoose;
 
@@ -15,7 +15,7 @@ const bookSchema = new Schema(
             type: String
         },
         published_year: {
-            type: Date
+            type: Number
         },
         isbn: {
             type: String
