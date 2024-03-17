@@ -6,7 +6,7 @@ module.exports.addNewUser = async(req, res, next)=>{
     const response = getResponseObject();
     try{
         const content = req.body;
-        if(["Member", "Librarian"].indexOf(content.role) === -1){
+        if(["member", "librarian"].indexOf(content.role) === -1){
             response.status = "error";
             response.message = "Invalid role selected!";
             return res.status(401).json(response);

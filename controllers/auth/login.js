@@ -7,6 +7,7 @@ async function generateToken(userData={}){
     const jwtPayload = {
 		id: userData.objectId,
 		user : {
+            id: userData._id,
             name: userData.name,
             email: userData.email,
             role: userData.role
@@ -20,14 +21,12 @@ module.exports.login = async(req, res, next) => {
         const response = getResponseObject();
         const {email, password} = req.body;
 
-        console.log("Inside auth", req.body);
 
         const userData = await User.findOne({email: email}).exec();
         if(!userData){
             response.message = "Email is not registered!";
             return res.status(401).json(response);
         }
-        console.log(userData)
         if(userData.password !== password){
             response.message = "Password doesn't match!";
             return res.status(401).json(response);
@@ -47,7 +46,7 @@ module.exports.login = async(req, res, next) => {
 
     }
     catch(err){
-        console.error(err,'>>>');
+        console.error(err);
         next(err);
     }
 }

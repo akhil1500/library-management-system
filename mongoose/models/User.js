@@ -18,7 +18,7 @@ const userSchema = new Schema(
             type: String
         },
         role: {
-            enum: ["Member", "Librarian"],
+            enum: ["member", "librarian"],
             type: String
         }
     },

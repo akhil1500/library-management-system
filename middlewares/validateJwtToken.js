@@ -88,7 +88,17 @@ const authenticate = (req, res, next) =>{
 }
 
 const checkLibrarianAccess = (req, res, next)=>{
-    if(req.headers.user.role !== 'Librarian'){
+    if(req.headers.user.role !== 'librarian'){
+        const response = getResponseObject();
+        response.status = "error";
+        response.message = "Access forbidden!";
+        return res.status(403).json(response);
+    }
+    next();
+}
+
+const checkMemberAccess = (req, res, next) =>{
+    if(req.headers.user.role !== 'member'){
         const response = getResponseObject();
         response.status = "error";
         response.message = "Access forbidden!";
@@ -99,5 +109,6 @@ const checkLibrarianAccess = (req, res, next)=>{
 
 module.exports = {
     authenticate,
-    checkLibrarianAccess
+    checkLibrarianAccess,
+    checkMemberAccess
 }
