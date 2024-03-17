@@ -7,6 +7,11 @@ const Book = require("../../mongoose/models/Book");
 
 const ObjectId = mongoose.Types.ObjectId;
 
+module.exports.updateBorrowHistoryForAnIdParams = ()=>
+    [
+        {type: "string", value: "book_id"}
+    ]
+
 module.exports.updateBorrowHistoryForAnId = async(req, res, next)=>{
     try{
         const response = getResponseObject();

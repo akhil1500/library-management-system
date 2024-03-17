@@ -8,6 +8,11 @@ const User = require("../../mongoose/models/User");
 
 const ObjectId = mongoose.Types.ObjectId;
 
+module.exports.borrowABookParams = ()=>
+    [
+        {type: "string", value: "book_id"}
+    ]
+
 module.exports.borrowABook = async(req, res, next)=>{
     try{
         const response = getResponseObject();

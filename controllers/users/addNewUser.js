@@ -2,6 +2,14 @@ const { getResponseObject } = require("../../helpers/supporter");
 
 const User = require("../../mongoose/models/User");
 
+module.exports.addNewUserParams = ()=>
+    [
+        {type: "string", value: "name"},
+        {type: "string", value: "role"},
+        {type: "string", value: "email"},
+        {type: "string", value: "password"}
+    ]
+
 module.exports.addNewUser = async(req, res, next)=>{
     const response = getResponseObject();
     try{

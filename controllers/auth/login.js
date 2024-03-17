@@ -3,6 +3,12 @@ const { getResponseObject } = require("../../helpers/supporter");
 
 const User = require("../../mongoose/models/User");
 
+module.exports.loginParams = ()=> 
+    [
+        {type: "string", value: "email"},
+        {type: "string", value: "password"}
+    ]
+
 async function generateToken(userData={}){
     const jwtPayload = {
 		id: userData.objectId,
