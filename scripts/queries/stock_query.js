@@ -1,0 +1,2 @@
+//Retrieve a list of books with the quantity in stock less than 5.
+db.books.find({quantity_in_stock: {$lt:5}},{_id:1, title:1, author:1, genre:1, published_year:1, isbn:1, quantity_in_stock:1}).pretty();
