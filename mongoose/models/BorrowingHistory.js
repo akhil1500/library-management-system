@@ -27,4 +27,9 @@ const borrowingHistorySchema = new Schema(
     {timestamps: true}
 )
 
+borrowingHistorySchema.index({
+    user_id: 1,
+    book_id: 1
+})
+
 module.exports = mongoose.model("borrowing_history", borrowingHistorySchema)
