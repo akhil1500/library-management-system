@@ -1,4 +1,9 @@
 const express = require("express");
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
+const swaggerDocument = YAML.load('./swagger.yaml');
+
 const cookieParser = require("cookie-parser");
 const bodyParser = require('body-parser');
 
@@ -15,6 +20,10 @@ process.on("unhandledRejection", (err)=>{
 
 const startApp = (mongoDb)=>{
     const app = express();
+
+    // Serve Swagger documentation
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 
     app.use(cors(
 		{
