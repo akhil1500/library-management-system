@@ -30,7 +30,7 @@ const getJwtFromRequest = (req)=>{
     return token;
 }
 
-function isError(e){
+const isError = (e)=>{
     return (
         e &&
         e.stack &&
@@ -41,10 +41,11 @@ function isError(e){
 }
 
 async function validateJwtToken(token, req){
-    if(token === null){
+    if(!token){
         return new Error("Token value is missing!");        
     }
     const decodedToken = await verifyJwtToken(token).catch(err => err);
+
     if(isError(decodedToken)){
         return { is_success: false, msg: "Jwt is not valid anymore" };
     }
@@ -87,22 +88,23 @@ const authenticate = (req, res, next) =>{
         })
 }
 
+const retunErrorMessage = (req, res, next)=>{
+    const response = getResponseObject();
+    response.status = "error";
+    response.message = "Access forbidden!";
+    return res.status(403).json(response);
+}
+
 const checkLibrarianAccess = (req, res, next)=>{
     if(req.headers.user.role !== 'librarian'){
-        const response = getResponseObject();
-        response.status = "error";
-        response.message = "Access forbidden!";
-        return res.status(403).json(response);
+        retunErrorMessage(req, res, next)
     }
     next();
 }
 
 const checkMemberAccess = (req, res, next) =>{
     if(req.headers.user.role !== 'member'){
-        const response = getResponseObject();
-        response.status = "error";
-        response.message = "Access forbidden!";
-        return res.status(403).json(response);
+        retunErrorMessage(req, res, next)
     }
     next();
 }
