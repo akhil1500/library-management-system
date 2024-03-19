@@ -18,13 +18,20 @@ const bookSchema = new Schema(
             type: Number
         },
         isbn: {
-            type: String
+            type: String,
+            required: true,
+            unique: true
         },
         quantity_in_stock: {
             type: Number
         }
     },
-    {timestamps: true}
+    {timestamps: true, autoIndex: true}
 );
+
+
+bookSchema.index({
+    isbn: 1
+},{unique: true})
 
 module.exports = mongoose.model("books", bookSchema);
