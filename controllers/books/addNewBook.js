@@ -13,8 +13,8 @@ module.exports.addNewBookParams = ()=>
     ]
 
 module.exports.addNewBook = async(req, res, next)=>{
+    const response = getResponseObject();
     try{
-        const response = getResponseObject();
         const content = req.body;
 
         const book = new Book({
@@ -35,6 +35,13 @@ module.exports.addNewBook = async(req, res, next)=>{
     }
     catch(err){
         console.error(err);
+        console.log(err.code)
+        if(err.code === 11000){
+            response.status = "error";
+            response.message = `Book already exist with the given isbn ${req.body.isbn}`
+            return res.status(401).json(response);
+        }
+
         next(err);
     }
 }
